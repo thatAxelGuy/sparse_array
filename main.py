@@ -17,11 +17,27 @@ class SparseArray():
                 new_list.append(0)
         return f"{new_list}"
 
+
     def __len__(self) -> int:
         return self._length
 
 
-sa = SparseArray([1, 0, 1, 2, 0, 100, 0, 1])
+    def __getitem__(self, index: int) -> int:
+        if index < 0:
+            index += self._length
+
+        if index < 0 or index >= self._length:
+                    raise IndexError("Index out of range.")
+        
+        if index in self._data:
+            return self._data[index]
+        
+        else:
+            return 0
+
+
+sa = SparseArray([1, 0, 99, 2, 0, 100, 0, 1])
 print(sa)
 print(len(sa))
-print(type(sa))
+print(sa[5])
+print(sa[-6])
