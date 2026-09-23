@@ -10,19 +10,27 @@ class SparseArray:
             if value != 0:
                 self._data[index] = value
 
-    def __str__(self) -> str:
-        """Return a string representation of the array including zeros."""
+
+    def _to_list(self) -> list[int]:
+        """Return the sparse array as a regular list."""
         new_list = []
         for i in range(self._length):
             if i in self._data:
                 new_list.append(self._data[i])
             else:
                 new_list.append(0)
-        return f"{new_list}"
+        return new_list
+
+
+    def __str__(self) -> str:
+        """Return a string representation of the array including zeros."""
+        return f"{self._to_list()}"
+
 
     def __len__(self) -> int:
         """Return the virtual length of the sparse array."""
         return self._length
+
 
     def __getitem__(self, index: int) -> int:
         """Return the value at the given index, or zero if it is not stored."""
@@ -38,19 +46,35 @@ class SparseArray:
             return 0
 
 
-    def __setitem__(self, key, value) -> None:
+    def __setitem__(self, index: int, value: int) -> None:
         """Set the value at the given index, removing it from storage if zero."""
-        if key < 0:
-            key += self._length
+        if index < 0:
+            index += self._length
 
-        if key < 0 or key >= self._length:
-            raise IndexError("Index out of range")
+        if index < 0 or index >= self._length:
+            raise IndexError("Index out of range.")
         
         if value == 0:
-            self._data.pop(key, None)
+            self._data.pop(index, None)
         else:
-            self._data[key] = value
+            self._data[index] = value
+
+    def __delitem__(self, index: int) -> None:
+        """Delete the value at the given index and reduce the array length."""
+        if index < 0:
+            index += self._length
+
+        if index < 0 or index >= self._length:
+            raise IndexError("Index out of range.")
         
+        new_list = self._to_list()
+        del new_list[index]
+        self._length -= 1
+        self._data.clear()
+        for position, value in enumerate(new_list):
+            if value != 0:
+                self._data[position] = value
+
 
 
 # Create a SparseArray
@@ -91,6 +115,20 @@ print("sa[2]:", sa[2])
 sa[-1] = 50
 print("After sa[-1] = 50:", sa)
 print("sa[-1]:", sa[-1])
+
+# __delitem__ test
+del sa[2]
+print("After del sa[2]:", sa)
+print("Length:", len(sa))
+
+del sa[-1]
+print("After del sa[-1]:", sa)
+print("Length:", len(sa))
+
+try:
+    del sa[10]
+except IndexError as error:
+    print("Caught:", error)
 
 # IndexError - positive index too large
 try:
