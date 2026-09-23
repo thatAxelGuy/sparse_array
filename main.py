@@ -1,6 +1,8 @@
-class SparseArray():
+class SparseArray:
+    """A list-like array that stores only non-zero values."""
 
     def __init__(self, values: list[int]) -> None:
+        """Initialize the sparse array from a sequence of integers."""
         self._length = len(values)
         self._data = {}
 
@@ -9,6 +11,7 @@ class SparseArray():
                 self._data[index] = value
 
     def __str__(self) -> str:
+        """Return a string representation of the array including zeros."""
         new_list = []
         for i in range(self._length):
             if i in self._data:
@@ -17,21 +20,20 @@ class SparseArray():
                 new_list.append(0)
         return f"{new_list}"
 
-
     def __len__(self) -> int:
+        """Return the virtual length of the sparse array."""
         return self._length
 
-
     def __getitem__(self, index: int) -> int:
+        """Return the value at the given index, or zero if it is not stored."""
         if index < 0:
             index += self._length
 
         if index < 0 or index >= self._length:
-                    raise IndexError("Index out of range.")
-        
+            raise IndexError("Index out of range.")
+
         if index in self._data:
             return self._data[index]
-        
         else:
             return 0
 
