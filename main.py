@@ -38,8 +38,80 @@ class SparseArray:
             return 0
 
 
+    def __setitem__(self, key, value) -> None:
+        """Set the value at the given index, removing it from storage if zero."""
+        if key < 0:
+            key += self._length
+
+        if key < 0 or key >= self._length:
+            raise IndexError("Index out of range")
+        
+        if value == 0:
+            self._data.pop(key, None)
+        else:
+            self._data[key] = value
+        
+
+
+# Create a SparseArray
 sa = SparseArray([1, 0, 99, 2, 0, 100, 0, 1])
-print(sa)
-print(len(sa))
-print(sa[5])
-print(sa[-6])
+
+# __str__
+print("Array:", sa)
+
+# __len__
+print("Length:", len(sa))
+
+# __getitem__ - regular indexes
+print("sa[0]:", sa[0])
+print("sa[2]:", sa[2])
+print("sa[1] (stored as zero):", sa[1])
+
+# __getitem__ - negative indexes
+print("sa[-1]:", sa[-1])
+print("sa[-6]:", sa[-6])
+print("sa[-8]:", sa[-8])
+
+# __setitem__ - update an existing value
+sa[2] = 67
+print("After sa[2] = 67:", sa)
+print("sa[2]:", sa[2])
+
+# __setitem__ - add a value where zero was stored
+sa[1] = 42
+print("After sa[1] = 42:", sa)
+print("sa[1]:", sa[1])
+
+# __setitem__ - setting a value to zero
+sa[2] = 0
+print("After sa[2] = 0:", sa)
+print("sa[2]:", sa[2])
+
+# __setitem__ - negative index
+sa[-1] = 50
+print("After sa[-1] = 50:", sa)
+print("sa[-1]:", sa[-1])
+
+# IndexError - positive index too large
+try:
+    print(sa[8])
+except IndexError as error:
+    print("Caught:", error)
+
+# IndexError - negative index too small
+try:
+    print(sa[-9])
+except IndexError as error:
+    print("Caught:", error)
+
+# __setitem__ IndexError - positive index too large
+try:
+    sa[8] = 10
+except IndexError as error:
+    print("Caught:", error)
+
+# __setitem__ IndexError - negative index too small
+try:
+    sa[-9] = 10
+except IndexError as error:
+    print("Caught:", error)
