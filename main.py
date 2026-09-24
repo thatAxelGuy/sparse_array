@@ -22,6 +22,17 @@ class SparseArray:
         return new_list
 
 
+    def _validate_index(self, index: int) -> int:
+        """Normalize and validate index."""
+        
+        if index < 0:
+                    index += self._length
+        
+        if index < 0 or index >= self._length:
+            raise IndexError("Index out of range.")
+
+        return index
+
     def __str__(self) -> str:
         """Return a string representation of the array including zeros."""
         return f"{self._to_list()}"
@@ -34,11 +45,8 @@ class SparseArray:
 
     def __getitem__(self, index: int) -> int:
         """Return the value at the given index, or zero if it is not stored."""
-        if index < 0:
-            index += self._length
 
-        if index < 0 or index >= self._length:
-            raise IndexError("Index out of range.")
+        index = self._validate_index(index)
 
         if index in self._data:
             return self._data[index]
@@ -48,12 +56,9 @@ class SparseArray:
 
     def __setitem__(self, index: int, value: int) -> None:
         """Set the value at the given index, removing it from storage if zero."""
-        if index < 0:
-            index += self._length
 
-        if index < 0 or index >= self._length:
-            raise IndexError("Index out of range.")
-        
+        index = self._validate_index(index)
+
         if value == 0:
             self._data.pop(index, None)
         else:
@@ -61,11 +66,7 @@ class SparseArray:
 
     def __delitem__(self, index: int) -> None:
         """Delete the value at the given index and reduce the array length."""
-        if index < 0:
-            index += self._length
-
-        if index < 0 or index >= self._length:
-            raise IndexError("Index out of range.")
+        index = self._validate_index(index)
         
         new_list = self._to_list()
         del new_list[index]
