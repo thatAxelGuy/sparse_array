@@ -24,7 +24,7 @@ class SparseArray:
 
     def _validate_index(self, index: int) -> int:
         """Normalize and validate index."""
-        
+
         if index < 0:
                     index += self._length
         
@@ -67,15 +67,15 @@ class SparseArray:
     def __delitem__(self, index: int) -> None:
         """Delete the value at the given index and reduce the array length."""
         index = self._validate_index(index)
-        
-        new_list = self._to_list()
-        del new_list[index]
-        self._length -= 1
-        self._data.clear()
-        for position, value in enumerate(new_list):
-            if value != 0:
-                self._data[position] = value
 
+        self._data.pop(index, None)
+
+        for position, value in list(self._data.items()):
+            if position > index:
+                self._data[position -1] = value
+                del self._data[position]
+
+        self._length -= 1
 
 
 # Create a SparseArray
@@ -125,6 +125,14 @@ print("Length:", len(sa))
 del sa[-1]
 print("After del sa[-1]:", sa)
 print("Length:", len(sa))
+
+sa_2= SparseArray([0, 7, 0, 50, 0, 90])
+
+print(sa_2)
+del sa_2[3]
+
+print(f"SA 2 after delete: {sa_2}")
+print(f"SA 2 Data: {sa_2._data}")
 
 try:
     del sa[10]
