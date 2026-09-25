@@ -74,6 +74,13 @@ class SparseArray:
         self._length -= 1
 
 
+    def append(self, value: int) -> None:
+        if value != 0:
+            self._data[self._length] = value
+        self._length += 1
+
+
+
 # Create a SparseArray
 sa = SparseArray([1, 0, 99, 2, 0, 100, 0, 1])
 
@@ -158,3 +165,14 @@ try:
     sa[-9] = 10
 except IndexError as error:
     print("Caught:", error)
+
+
+sa.append(7)
+print(sa)
+print(sa._data)
+print(len(sa))
+
+sa.append(0)
+print(sa)
+print(sa._data)
+print(len(sa))
