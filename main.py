@@ -13,13 +13,7 @@ class SparseArray:
 
     def _to_list(self) -> list[int]:
         """Return the sparse array as a regular list."""
-        new_list = []
-        for i in range(self._length):
-            if i in self._data:
-                new_list.append(self._data[i])
-            else:
-                new_list.append(0)
-        return new_list
+        return [self._data.get(i, 0) for i in range(self._length)]
 
 
     def _validate_index(self, index: int) -> int:
@@ -68,13 +62,15 @@ class SparseArray:
         """Delete the value at the given index and reduce the array length."""
         index = self._validate_index(index)
 
-        self._data.pop(index, None)
+        new_data = {}
 
-        for position, value in list(self._data.items()):
-            if position > index:
-                self._data[position -1] = value
-                del self._data[position]
+        for position, value in self._data.items():
+            if position < index:
+                new_data[position] = value
+            elif position > index:
+                new_data[position - 1] = value
 
+        self._data = new_data
         self._length -= 1
 
 
