@@ -37,15 +37,26 @@ class SparseArray:
         return self._length
 
 
-    def __getitem__(self, index: int) -> int:
+    def __getitem__(self, index: int | slice) -> int | list[int]:
         """Return the value at the given index, or zero if it is not stored."""
+        if isinstance(index, int):
+            index = self._validate_index(index)
 
-        index = self._validate_index(index)
+            if index in self._data:
+                return self._data[index]
+            else:
+                return 0
+            
+        elif isinstance(index, slice):
+            start, stop, step = index.indices(self._length)
+            result = []
+            for i in range(start, stop, step):
+                result.append(self[i])
+            
+            return result
 
-        if index in self._data:
-            return self._data[index]
         else:
-            return 0
+            raise TypeError("Index must be an integer or a slice.")
 
 
     def __setitem__(self, index: int, value: int) -> None:
@@ -176,3 +187,9 @@ sa.append(0)
 print(sa)
 print(sa._data)
 print(len(sa))
+
+sa = SparseArray([10, 0, 20, 0, 30, 40])
+
+result = sa[1:4]
+
+print(result)
